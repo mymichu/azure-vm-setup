@@ -56,9 +56,7 @@ ADD agnoster.zsh-theme /root/.oh-my-zsh/themes
 #
 # Add pulumi cli 
 RUN mkdir -p /root/.oh-my-zsh/custom/plugins/pulumi/\
-    && echo "autoload -Uz pulumi" > /root/.oh-my-zsh/custom/plugins/pulumi/pulumi.plugin.zsh \
-    && echo "pulumi" >> /root/.oh-my-zsh/custom/plugins/pulumi/pulumi.plugin.zsh \
-    && pulumi gen-completion zsh > /root/.oh-my-zsh/custom/plugins/pulumi/pulumi
+    && pulumi gen-completion zsh > /root/.oh-my-zsh/custom/plugins/pulumi/pulumi.plugin.zsh 
 # zsh configuration
 ADD .zshrc /root
 #
