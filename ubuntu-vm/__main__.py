@@ -86,3 +86,7 @@ virtual_machine = azure_native.compute.VirtualMachine("virtualMachine",
         ),
     ),
     vm_name="myVM")
+
+#Show Access Information
+pulumi.export("user", username)
+pulumi.export("public_ip", public_ip_addr.ip_address)
