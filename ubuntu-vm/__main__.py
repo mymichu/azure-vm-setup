@@ -1,6 +1,7 @@
 import pulumi
 import pulumi_azure_native as azure_native
 from pulumi_azure_native import resources
+from pulumi_azure_native import network
 import base64
 import pathlib
 
@@ -89,4 +90,11 @@ virtual_machine = azure_native.compute.VirtualMachine("virtualMachine",
 
 #Show Access Information
 pulumi.export("user", username)
+
+# get dynamic allocated up
+combined_output = pulumi.Output.all(virtual_machine.id, public_ip.name, resource_group.name)
+public_ip_addr = combined_output.apply(
+    lambda lst: network.get_public_ip_address(
+        public_ip_address_name=lst[1],
+        resource_group_name=lst[2]))
 pulumi.export("public_ip", public_ip_addr.ip_address)
