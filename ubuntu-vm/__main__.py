@@ -1,6 +1,9 @@
 import pulumi
 import pulumi_azure_native as azure_native
 from pulumi_azure_native import resources
+import base64
+import pathlib
+
 username="michel"
 
 # Create an Azure Resource Group
@@ -33,6 +36,11 @@ network_iface = azure_native.network.NetworkInterface(
         public_ip_address=azure_native.network.PublicIPAddressArgs(id=public_ip.id),
     )])
 
+current_dir = pathlib.Path(__file__).parent.resolve()
+data = open(f"{current_dir}/cloud-init.yml", "r").read()
+utf8_code = data.encode("UTF-8")
+encoded_cloud_init = base64.b64encode(utf8_code)
+
 virtual_machine = azure_native.compute.VirtualMachine("virtualMachine",
     hardware_profile=azure_native.compute.HardwareProfileArgs(
         vm_size="Standard_D1_v2",
@@ -45,6 +53,7 @@ virtual_machine = azure_native.compute.VirtualMachine("virtualMachine",
         )],
     ),
     
+
     os_profile=azure_native.compute.OSProfileArgs(
         admin_username=f"{username}",
         computer_name="myVM",
@@ -57,6 +66,7 @@ virtual_machine = azure_native.compute.VirtualMachine("virtualMachine",
                 )],
             ),
         ),
+        custom_data=encoded_cloud_init.decode("utf-8")
     ),
     resource_group_name=resource_group.name,
     storage_profile=azure_native.compute.StorageProfileArgs(
